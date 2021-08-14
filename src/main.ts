@@ -1,2 +1,2 @@
 import './config'
-import './services/telegram-bot'
+import './telegram/telegram-bot'
