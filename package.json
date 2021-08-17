@@ -1,0 +1,36 @@
+{
+  "name": "cafofo-manager",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.ts",
+  "scripts": {
+    "cli": "ts-node src/cli.ts",
+    "test": "jest",
+    "lint": "eslint src/ --ext .js,.jsx,.ts,.tsx",
+    "build": "tsc -p tsconfig.json",
+    "clean": "rm -rf dist build",
+    "ts-node": "ts-node"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Leandro-Rocha/cafofo-manager.git"
+  },
+  "author": "Leandro Rocha",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Leandro-Rocha/cafofo-manager/issues"
+  },
+  "homepage": "https://github.com/Leandro-Rocha/cafofo-manager#readme",
+  "dependencies": {
+    "axios": "^0.21.1",
+    "console-stamp": "^3.0.3",
+    "dotenv": "^10.0.0",
+    "moment": "^2.29.1",
+    "telegraf": "^4.4.1",
+    "telegraf-inline-menu": "^6.3.0",
+    "tslib": "^2.3.0"
+  },
+  "devDependencies": {
+    "@types/node": "^16.4.13"
+  }
+}
