@@ -16,8 +16,10 @@ export async function showCalendar(ctx: Context<Update>, maxResults = 10) {
 
         for (const [day, events] of Object.entries(grouped)) {
             const momentDay = moment(day)
+            const isToday = momentDay.diff(moment(), 'days') == 0
 
-            response += `${momentDay.format('DD MMM (ddd) - ')}${momentDay.fromNow()}\n`
+
+            response += `${momentDay.format('DD MMM (ddd) - ')}${(isToday ? 'hoje' : momentDay.fromNow())}\n`
             response += `${events.map(showEventWithTime).join('\n')}`
             response += `\n\n`
         }
@@ -62,7 +64,7 @@ export async function createOverview() {
 
 
 
-    return todayEventsFormatted + tomorrowEventsFormatted  
+    return todayEventsFormatted + tomorrowEventsFormatted
 }
 
 export async function showOverview(ctx: Context<Update>) {
