@@ -1,11 +1,9 @@
 import { Telegraf } from 'telegraf'
-import { MissingEnvironmentProperty } from './core/exceptions'
-import * as BotMenu from './telegram/telegram-menu'
+import { MissingEnvironmentProperty } from '../../core/exceptions'
+import * as BotMenu from './telegram-menu'
 
 
-if (!process.env.BOT_TOKEN) {
-    throw new MissingEnvironmentProperty('BOT_TOKEN')
-}
+if (!process.env.BOT_TOKEN) throw new MissingEnvironmentProperty('BOT_TOKEN')
 
 console.debug('Starting TelegramBot')
 

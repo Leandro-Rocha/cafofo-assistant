@@ -1,2 +1,3 @@
 import './config'
-import './telegram/telegram-bot'
+import './modules/mongo/mongo'
+import './modules/telegram/telegram-bot'

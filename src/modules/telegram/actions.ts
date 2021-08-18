@@ -1,9 +1,9 @@
 import moment from "moment";
 import { Context } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
-import * as Calendar from "../services/calendar/calendar";
-import * as ChoreService from "../services/chores/chore-service";
-import { Chore, ChoreExecution } from "../services/chores/interfaces";
+import * as Calendar from "../../services/calendar/calendar";
+import * as ChoreService from "../../services/chores/chore-service";
+import { Chore, ChoreExecution } from "../../services/chores/interfaces";
 import { Stickers } from "./stickers";
 
 const showEventWithTime = (event: Calendar.CalendarEvent) => `  ${(event.start.hasTime ? event.start.moment.format('HH:mm - ') : '')}${event.summary}`
