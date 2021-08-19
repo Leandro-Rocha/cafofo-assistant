@@ -1,10 +1,9 @@
-import mongoose, { Schema } from 'mongoose'
-import { MissingEnvironmentProperty } from '../../core/exceptions'
+import mongoose, { model, Schema } from 'mongoose'
+import { requireEnv } from '../../core/util'
 import { ChoreExecution, ChoreType } from '../../services/chores/interfaces'
 
-if (!process.env.MONGO_URL) throw new MissingEnvironmentProperty('MONGO_URL')
-const MONGO_URL = process.env.MONGO_URL
-const dbName = 'cafofo'
+const MONGO_URL = requireEnv('MONGO_URL')
+const dbName = 'cafofo' + (process.env.DEBUG ? '_test' : '')
 
 console.debug('Starting Mongo client')
 
@@ -22,4 +21,5 @@ const choreSchema = new Schema<ChoreExecution>({
     timestamp: { type: Number, required: true }
 })
 
-const choreCollection = mongoose.model('tarefas', choreSchema)
+export const ChoreModel = model<ChoreExecution>('tarefas', choreSchema);
+export const choreCollection = model('tarefas', choreSchema)

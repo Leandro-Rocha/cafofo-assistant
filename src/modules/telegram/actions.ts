@@ -2,8 +2,8 @@ import moment from "moment";
 import { Context } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import * as Calendar from "../../services/calendar/calendar";
-import * as ChoreService from "../../services/chores/chore-service";
 import { Chore, ChoreExecution } from "../../services/chores/interfaces";
+import { choreCollection, ChoreModel } from "../mongo/mongo";
 import { Stickers } from "./stickers";
 
 const showEventWithTime = (event: Calendar.CalendarEvent) => `  ${(event.start.hasTime ? event.start.moment.format('HH:mm - ') : '')}${event.summary}`
@@ -82,14 +82,15 @@ export async function showOverview(ctx: Context<Update>) {
 
 export async function registerChore(ctx: Context<Update>, chore: Chore) {
 
-    const choreExecution = {
+    const choreExecution = new ChoreModel({
         actor: ctx.from!.first_name,
         type: chore.type,
-        timestamp: Date.now()
-    }
+        timestamp: Date.now(),
+    })
+    choreExecution.isNew = true
 
     try {
-        await ChoreService.registerChoreExecution(choreExecution)
+        await choreExecution.save()
         await ctx.replyWithSticker(Stickers.ConcernedFroge_thumbs)
         await ctx.reply('Anotado!')
     }
@@ -106,7 +107,7 @@ export async function registerChore(ctx: Context<Update>, chore: Chore) {
 export async function listChoreExecution(ctx: Context<Update>, chore: Chore) {
 
     try {
-        const choreExecutions: ChoreExecution[] = await ChoreService.listChores(chore.type);
+        const choreExecutions: ChoreExecution[] = await choreCollection.find({ type: chore.type })
         const response = choreExecutions.map(chore => {
             const timestamp = moment(chore.timestamp).format('YYYY-MM-DD HH:mm')
             return `${chore.actor} - ${timestamp} `
