@@ -43,7 +43,7 @@ export async function createOverview() {
     const tomorrowEvents = events.filter(event => event.start.moment.isSame(moment().add(1, 'days'), 'day'))
 
     const todayEventsFormatted = `Para hoje: ` + (todayEvents.length > 0
-        ? `\n   ${todayEvents.map(showEventWithTime).join('\n')}`
+        ? `\n${todayEvents.map(showEventWithTime).join('\n')}`
         : `Nada 😎`) + '\n\n'
 
     const tomorrowEventsFormatted = `Para amanhã: ` + (tomorrowEvents.length > 0

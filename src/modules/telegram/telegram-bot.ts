@@ -1,5 +1,4 @@
 import { Telegraf } from 'telegraf'
-import { MissingEnvironmentProperty } from '../../core/exceptions'
 import { requireEnv } from '../../core/util'
 import * as BotMenu from './telegram-menu'
 
