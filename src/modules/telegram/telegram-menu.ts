@@ -3,8 +3,8 @@ import { createBackMainMenuButtons, MenuMiddleware, MenuTemplate } from 'telegra
 import { ConstOrPromise } from 'telegraf-inline-menu/dist/source/generic-types'
 import { MenuLike } from 'telegraf-inline-menu/dist/source/menu-like'
 import { Update } from 'telegraf/typings/core/types/typegram'
-import { choreList } from '../services/chores/data'
-import { Chore } from '../services/chores/interfaces'
+import { choreList } from '../../services/chores/data'
+import { Chore } from '../../services/chores/interfaces'
 import * as Actions from './actions'
 
 

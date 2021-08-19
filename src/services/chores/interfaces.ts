@@ -5,7 +5,6 @@ export interface Chore {
     action: string,
     past: string,
     alarm: number,
-
 }
 
 export interface ChoreExecution {
