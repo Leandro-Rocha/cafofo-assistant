@@ -2,11 +2,11 @@ import moment from "moment";
 import { Context } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import * as Calendar from "../../services/calendar/calendar";
+import { showEventWithTime } from "../../services/calendar/calendar";
 import { Chore, ChoreExecution } from "../../services/chores/interfaces";
+import { miguelFacts } from "../../services/miguel/miguel";
 import { choreCollection, ChoreModel } from "../mongo/mongo";
 import { Stickers } from "./stickers";
-
-const showEventWithTime = (event: Calendar.CalendarEvent) => `  ${(event.start.hasTime ? event.start.moment.format('HH:mm - ') : '')}${event.summary}`
 
 export async function showCalendar(ctx: Context<Update>, maxResults = 10) {
     try {
@@ -37,39 +37,10 @@ export async function showCalendar(ctx: Context<Update>, maxResults = 10) {
 }
 
 
-export async function createOverview() {
-    const events = await Calendar.listNextEvents()
-    const todayEvents = events.filter(event => event.start.moment.isSame(moment().add(0, 'days'), 'day'))
-    const tomorrowEvents = events.filter(event => event.start.moment.isSame(moment().add(1, 'days'), 'day'))
-
-    const todayEventsFormatted = `Para hoje: ` + (todayEvents.length > 0
-        ? `\n${todayEvents.map(showEventWithTime).join('\n')}`
-        : `Nada 😎`) + '\n\n'
-
-    const tomorrowEventsFormatted = `Para amanhã: ` + (tomorrowEvents.length > 0
-        ? `\n   ${tomorrowEvents.map(showEventWithTime).join('\n')}`
-        : `Nada 😎`)
-
-    // const lastChoreList: { type: string, timestamp: number }[] = await ChoreService.lastChoreExecution()
-    // const lastChoresParsed = lastChoreList
-    //     .map(choreExecution => {
-    //         const chore = choreList.find(chore => chore.type === choreExecution.type)!
-    //         return { chore, lastExecution: moment(choreExecution.timestamp) }
-    //     })
-    //     .filter(choreExecution => {
-    //         console.log(choreExecution.chore.title + '  -  ' + choreExecution.lastExecution.diff(moment(), 'days'))
-
-    //         return choreExecution.lastExecution.diff(moment(), 'days') > -1
-    //     })
-
-
-
-    return todayEventsFormatted + tomorrowEventsFormatted
-}
-
 export async function showOverview(ctx: Context<Update>) {
     try {
-        await ctx.reply(await createOverview())
+        await ctx.reply(await Calendar.eventsOverview())
+        await ctx.reply(miguelFacts())
     }
     catch (err) {
         console.error(err);

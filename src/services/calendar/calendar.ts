@@ -77,3 +77,20 @@ export function groupByDay(events: CalendarEvent[]): { [key: string]: CalendarEv
     }, {})
 }
 
+export const showEventWithTime = (event: CalendarEvent) => `  ${(event.start.hasTime ? event.start.moment.format('HH:mm - ') : '')}${event.summary}`
+
+export async function eventsOverview() {
+    const events = await listNextEvents()
+    const todayEvents = events.filter(event => event.start.moment.isSame(moment().add(0, 'days'), 'day'))
+    const tomorrowEvents = events.filter(event => event.start.moment.isSame(moment().add(1, 'days'), 'day'))
+
+    const todayEventsFormatted = `Para hoje: ` + (todayEvents.length > 0
+        ? `\n${todayEvents.map(showEventWithTime).join('\n')}`
+        : `Nada 😎`) + '\n\n'
+
+    const tomorrowEventsFormatted = `Para amanhã: ` + (tomorrowEvents.length > 0
+        ? `\n   ${tomorrowEvents.map(showEventWithTime).join('\n')}`
+        : `Nada 😎`)
+
+    return todayEventsFormatted + tomorrowEventsFormatted
+}
