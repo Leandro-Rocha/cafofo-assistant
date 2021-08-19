@@ -1,18 +1,12 @@
 import axios from 'axios'
 import moment, { Moment } from 'moment'
 import { MissingEnvironmentProperty } from '../../core/exceptions'
+import { requireEnv } from '../../core/util'
+import { getGoogleAccessToken } from '../../modules/google/auth'
 
-if (!process.env.CALENDAR_ID) throw new MissingEnvironmentProperty('CALENDAR_ID')
-const CALENDAR_ID = process.env.CALENDAR_ID
-
-if (!process.env.API_KEY) throw new MissingEnvironmentProperty('API_KEY')
-const API_KEY = process.env.API_KEY
-
-if (!process.env.CALENDAR_SERVICE_ADDRESS) throw new MissingEnvironmentProperty('CALENDAR_SERVICE_ADDRESS')
-const CALENDAR_SERVICE_ADDRESS = process.env.CALENDAR_SERVICE_ADDRESS
-
-if (!process.env.ACCESS_TOKEN) throw new MissingEnvironmentProperty('ACCESS_TOKEN')
-const ACCESS_TOKEN = process.env.ACCESS_TOKEN
+const CALENDAR_SERVICE_ADDRESS = requireEnv('CALENDAR_SERVICE_ADDRESS')
+const CALENDAR_ID = requireEnv('CALENDAR_ID')
+const API_KEY = requireEnv('GOOGLE_API_KEY')
 
 // From Google
 interface ApiCalendarEvent {
@@ -53,10 +47,12 @@ function parseCalendarEvent(event: ApiCalendarEvent): CalendarEvent {
 
 
 export async function listNextEvents(maxResults = 10): Promise<CalendarEvent[]> {
+
+    console.debug(`Listing next ${maxResults} events`)
     const eventsCall = await axios.get(`${CALENDAR_SERVICE_ADDRESS}${CALENDAR_ID}/events?key=${API_KEY}`,
         {
             headers: {
-                Authorization: `Bearer ${ACCESS_TOKEN}`,
+                Authorization: `Bearer ${(await getGoogleAccessToken()).access_token}`,
                 Accept: 'application/json'
             },
             params: {

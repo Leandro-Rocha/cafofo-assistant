@@ -23,10 +23,3 @@ const choreSchema = new Schema<ChoreExecution>({
 })
 
 const choreCollection = mongoose.model('tarefas', choreSchema)
-
-async function test() {
-    const newLocal = await choreCollection.findOne({ timestamp: 1628789609897 })
-    console.log(newLocal)
-}
-
-test()
