@@ -3,6 +3,7 @@ import { Context } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import * as Calendar from "../../services/calendar/calendar";
 import { showEventWithTime } from "../../services/calendar/calendar";
+import { choreList } from "../../services/chores/data";
 import { Chore, ChoreExecution } from "../../services/chores/interfaces";
 import { miguelFacts } from "../../services/miguel/miguel";
 import { choreCollection, ChoreModel } from "../mongo/mongo";
@@ -36,6 +37,44 @@ export async function showCalendar(ctx: Context<Update>, maxResults = 10) {
     return '/'
 }
 
+
+export async function lastChores(ctx: Context<Update>) {
+    try {
+
+        const lastExecutions = await choreCollection.aggregate([{
+            $sort: {
+                timestamp: 1,
+            }
+        }, {
+            $group: {
+                _id: '$type',
+                actor: { $last: "$actor" },
+                timestamp: { $last: "$timestamp" },
+                type: { $last: "$type" },
+            }
+        }])
+
+        const lastExecutionWithChore = lastExecutions.map(execution => {
+            const chore = choreList.find(chore => chore.type === execution.type);
+            return { ...execution, ...{ chore } };
+        });
+
+        const overdue = lastExecutionWithChore.filter(execution => {
+            return moment().diff(moment(execution.timestamp), 'days') > execution.chore.alarm
+        })
+
+        console.log(overdue);
+
+        await ctx.reply(overdue.map(chore => `${chore.chore.title} não é feito ${moment(chore.timestamp).fromNow()}`).join('\n'))
+    }
+    catch (err) {
+        console.error(err);
+        await ctx.replyWithSticker(Stickers.Buddy_Bear_sad)
+        await ctx.reply('Não consigo fazer o resumo de hoje...')
+    }
+
+    return '/'
+}
 
 export async function showOverview(ctx: Context<Update>) {
     try {

@@ -11,8 +11,9 @@ import * as Actions from './actions'
 export function createMainMenu(bot: Telegraf) {
     const menuTemplate = new MenuTemplate<Context<Update>>(ctx => `Olá ${ctx.from?.first_name}!\nComo posso ajudar?`)
 
-    menuTemplate.interact('Resumo', 'overview', { do: Actions.showOverview })
     menuTemplate.interact('Agenda', 'calendar', { do: (ctx) => Actions.showCalendar(ctx) })
+    menuTemplate.interact('Resumo', 'overview', { do: Actions.showOverview })
+    menuTemplate.interact('Últimas Tarefas', 'last_chores', { do: Actions.lastChores })
     menuTemplate.submenu('Registrar tarefa', 'register_chore', chooseChoresMenu({ targetSubmenu: registerChoreConfirm() }))
     menuTemplate.submenu('Ver tarefa', 'view_chore', chooseChoresMenu({ action: Actions.listChoreExecution }))
 
