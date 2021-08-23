@@ -55,17 +55,8 @@ export async function lastChores(ctx: Context<Update>) {
             }
         })
 
+        console.log(await ChoreService.overdueChores())
 
-        // const lastExecutionWithChore = lastExecutions.map(execution => {
-        //     const chore = choreList.find(chore => chore.type === execution.type);
-        //     return { ...execution, ...{ chore } };
-        // });
-
-        // const overdue = lastExecutionWithChore.filter(execution => {
-        //     return moment().diff(moment(execution.timestamp), 'days') > execution.chore!.alarm
-        // })
-
-        // console.log(overdue);
 
         await ctx.reply(response)
     }
@@ -82,6 +73,20 @@ export async function showOverview(ctx: Context<Update>) {
     try {
         await ctx.reply(await Calendar.eventsOverview())
         await ctx.reply(miguelFacts())
+
+        let overdueChoresText = 'Essas tarefas estão atrasadas!\n\n'
+        const overdueChores = await ChoreService.overdueChores()
+
+        overdueChores.forEach(overdueChore => {
+
+            if (overdueChore.lastExecution) {
+                overdueChoresText += `${overdueChore.chore.title} - ${moment(overdueChore.lastExecution.timestamp).fromNow()} por ${overdueChore.lastExecution.actor}\n`
+            }
+            else {
+                overdueChoresText += `Ninguém nunca ${overdueChore.chore.past} 😳\n`
+            }
+        })
+        await ctx.reply(overdueChoresText)
     }
     catch (err) {
         console.error(err);

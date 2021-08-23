@@ -1,5 +1,7 @@
+import moment from "moment";
 import { choreCollection } from "../../modules/mongo/mongo";
-import { ChoreExecution } from "./interfaces";
+import { choreList } from "./data";
+import { Chore, ChoreExecution } from "./interfaces";
 
 
 export namespace ChoreService {
@@ -17,5 +19,19 @@ export namespace ChoreService {
                 timestamp: { $last: "$timestamp" },
             }
         }])
+    }
+
+    export async function overdueChores(): Promise<{ chore: Chore; lastExecution?: ChoreExecution | undefined; }[]> {
+        let overdueChores: { chore: Chore, lastExecution?: ChoreExecution }[] = []
+        const lastExecutions = await lastChoreExecutions()
+
+        choreList.forEach(chore => {
+            const lastExecution = lastExecutions.find(execution => execution.type === chore.type)
+
+            if (!lastExecution || moment().diff(moment(lastExecution.timestamp), 'days') > chore.alarm)
+                overdueChores.push({ chore, lastExecution: (lastExecution ? lastExecution : undefined) })
+        })
+
+        return overdueChores
     }
 }
