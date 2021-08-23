@@ -3,9 +3,9 @@ import { requireEnv } from '../../core/util'
 import { ChoreExecution, ChoreType } from '../../services/chores/interfaces'
 
 const MONGO_URL = requireEnv('MONGO_URL')
-const dbName = 'cafofo' + (process.env.DEBUG ? '_test' : '')
+const dbName = 'cafofo' + (process.env.ENV === 'PROD' ? '' : '_test')
 
-console.debug('Starting Mongo client')
+console.debug(`Starting Mongo client [${dbName}]`)
 
 mongoose.connect(MONGO_URL, { useNewUrlParser: true, useUnifiedTopology: true, dbName: dbName })
 

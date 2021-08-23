@@ -3,6 +3,7 @@ import { Context } from "telegraf";
 import { Update } from "telegraf/typings/core/types/typegram";
 import * as Calendar from "../../services/calendar/calendar";
 import { showEventWithTime } from "../../services/calendar/calendar";
+import { ChoreService } from "../../services/chores/chore-service";
 import { choreList } from "../../services/chores/data";
 import { Chore, ChoreExecution } from "../../services/chores/interfaces";
 import { miguelFacts } from "../../services/miguel/miguel";
@@ -40,32 +41,33 @@ export async function showCalendar(ctx: Context<Update>, maxResults = 10) {
 
 export async function lastChores(ctx: Context<Update>) {
     try {
+        let response = ''
+        const lastExecutions = await ChoreService.lastChoreExecutions()
 
-        const lastExecutions = await choreCollection.aggregate([{
-            $sort: {
-                timestamp: 1,
+        choreList.forEach(chore => {
+            const lastExecution = lastExecutions.find(execution => execution.type === chore.type)
+
+            if (lastExecution) {
+                response += `${chore.title} - ${moment(lastExecution.timestamp).fromNow()} por ${lastExecution.actor}\n`
             }
-        }, {
-            $group: {
-                _id: '$type',
-                actor: { $last: "$actor" },
-                timestamp: { $last: "$timestamp" },
-                type: { $last: "$type" },
+            else {
+                response += `Ninguém nunca ${chore.past} 😳\n`
             }
-        }])
-
-        const lastExecutionWithChore = lastExecutions.map(execution => {
-            const chore = choreList.find(chore => chore.type === execution.type);
-            return { ...execution, ...{ chore } };
-        });
-
-        const overdue = lastExecutionWithChore.filter(execution => {
-            return moment().diff(moment(execution.timestamp), 'days') > execution.chore.alarm
         })
 
-        console.log(overdue);
 
-        await ctx.reply(overdue.map(chore => `${chore.chore.title} não é feito ${moment(chore.timestamp).fromNow()}`).join('\n'))
+        // const lastExecutionWithChore = lastExecutions.map(execution => {
+        //     const chore = choreList.find(chore => chore.type === execution.type);
+        //     return { ...execution, ...{ chore } };
+        // });
+
+        // const overdue = lastExecutionWithChore.filter(execution => {
+        //     return moment().diff(moment(execution.timestamp), 'days') > execution.chore!.alarm
+        // })
+
+        // console.log(overdue);
+
+        await ctx.reply(response)
     }
     catch (err) {
         console.error(err);
