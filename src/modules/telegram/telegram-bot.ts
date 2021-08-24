@@ -11,9 +11,7 @@ BotMenu.createMainMenu(bot)
 if (process.env.DEBUG == 'true') {
     bot.on('sticker', (ctx) => { console.log(ctx.message.sticker) })
 
-    broadcast(`Hello! Running from ${os.hostname()}`)
-
-
+    broadcast(`Olá!! Rodando em ${os.hostname()}`)
 }
 
 process.once('SIGINT', async () => {
