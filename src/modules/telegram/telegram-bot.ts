@@ -17,11 +17,11 @@ if (process.env.DEBUG == 'true') {
 }
 
 process.once('SIGINT', async () => {
-    await broadcast('Bye!')
+    await broadcast(`Saindo com [SIGINT]`)
     bot.stop('SIGINT')
 })
 process.once('SIGTERM', async () => {
-    await broadcast('Bye')
+    await broadcast(`Saindo com [SIGINT]`)
     bot.stop('SIGTERM')
 })
 
