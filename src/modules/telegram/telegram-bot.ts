@@ -1,7 +1,7 @@
-import { Telegraf } from 'telegraf'
-import { requireEnv } from '../../core/util'
-import * as BotMenu from './telegram-menu'
 import * as os from 'os'
+import { Telegraf } from 'telegraf'
+import { requireEnv, sleep } from '../../core/util'
+import * as BotMenu from './telegram-menu'
 
 console.debug('Starting TelegramBot')
 
@@ -24,8 +24,25 @@ process.once('SIGTERM', async () => {
     bot.stop('SIGTERM')
 })
 
-bot.launch()
-console.info('TelegramBot started')
+
+async function init() {
+    while (true)
+        try {
+            await bot.launch()
+            console.info('TelegramBot started')
+            break
+        }
+        catch (reason) {
+            console.log(reason.response);
+
+            console.warn('Could not start Telegram bot. Retrying in 10s');
+            await sleep(10000)
+        }
+}
+
+
+init()
+
 
 
 export async function broadcast(message: string) {
