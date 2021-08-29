@@ -29,7 +29,7 @@ async function init() {
     while (true)
         try {
             await bot.launch()
-            console.info('TelegramBot started')
+            console.info('Telegram Bot started')
             break
         }
         catch (reason) {
