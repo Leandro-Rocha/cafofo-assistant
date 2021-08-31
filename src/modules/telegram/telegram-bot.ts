@@ -1,53 +1,59 @@
 import * as os from 'os'
-import { Telegraf } from 'telegraf'
+import { Scenes, Telegraf } from 'telegraf'
 import { requireEnv, sleep } from '../../core/util'
-import * as BotMenu from './telegram-menu'
+import { User } from '../orm/entities/User.entity'
+import { loadScenes } from './scenes/scene-loader'
 
-console.debug('Starting TelegramBot')
 
-const bot = new Telegraf(requireEnv('BOT_TOKEN'))
-BotMenu.createMainMenu(bot)
-
-if (process.env.DEBUG == 'true') {
-    bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
-    bot.on('message', (ctx) => { console.debug(ctx.from) })
-
-    broadcast(`Olá!! Rodando em ${os.hostname()}`)
+export interface CafofoContext extends Scenes.WizardContext {
+    cffUser?: User
 }
 
-process.once('SIGINT', async () => {
-    await broadcast(`Saindo com [SIGINT] [${process.exitCode}]`)
-    bot.stop('SIGINT')
-})
-process.once('SIGTERM', async () => {
-    await broadcast(`Saindo com [SIGTERM] [${process.exitCode}]`)
-    bot.stop('SIGTERM')
-})
+export namespace Bot {
+    let bot: Telegraf<CafofoContext>
 
+    export async function init() {
+        console.debug('Starting TelegramBot')
 
-async function init() {
-    while (true)
-        try {
-            await bot.launch()
-            console.info('TelegramBot started')
-            break
+        bot = new Telegraf<CafofoContext>(requireEnv('BOT_TOKEN'))
+
+        loadScenes(bot)
+
+        if (process.env.DEBUG == 'true') {
+            bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
+            bot.on('message', (ctx) => { console.debug(ctx.from) })
+
+            broadcast(`Olá!! Rodando em ${os.hostname()}`)
         }
-        catch (reason) {
-            console.log(reason.response);
 
-            console.warn('Could not start Telegram bot. Retrying in 10s');
-            await sleep(10000)
-        }
-}
+        process.once('SIGINT', async () => {
+            await broadcast(`Saindo com [SIGINT] [${process.exitCode}]`)
+            bot.stop('SIGINT')
+        })
+        process.once('SIGTERM', async () => {
+            await broadcast(`Saindo com [SIGTERM] [${process.exitCode}]`)
+            bot.stop('SIGTERM')
+        })
 
+        while (true)
 
-init()
+            try {
+                await bot.launch()
+                console.info('TelegramBot started')
+                break
+            }
+            catch (reason) {
+                console.log(reason.response);
 
+                console.warn('Could not start Telegram bot. Retrying in 10s');
+                await sleep(10000)
+            }
+    }
 
-
-export async function broadcast(message: string) {
-    const broadcastChatIds = process.env.BROADCAST_CHAT_IDS?.split(',')
-    if (!broadcastChatIds) return
-    for (const chatId of broadcastChatIds)
-        await bot.telegram.sendMessage(chatId, message)
+    export async function broadcast(message: string) {
+        const broadcastChatIds = requireEnv('BROADCAST_CHAT_IDS')?.split(',')
+        if (!broadcastChatIds) return
+        for (const chatId of broadcastChatIds)
+            await bot.telegram.sendMessage(chatId, message)
+    }
 }

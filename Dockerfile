@@ -12,7 +12,4 @@ COPY tsconfig.json .
 
 RUN npm run build
 
-ENV TZ="America/Sao_Paulo"
-
 CMD [ "node", "dist/tsc/cli.js" ]
-
