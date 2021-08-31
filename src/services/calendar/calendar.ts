@@ -1,11 +1,11 @@
 import axios from 'axios'
 import moment, { Moment } from 'moment'
-import { requireEnv } from '../../core/util'
+import { requireProperty } from '../../core/util'
 import { getGoogleAccessToken } from '../../modules/google/auth'
 
-const CALENDAR_SERVICE_ADDRESS = requireEnv('CALENDAR_SERVICE_ADDRESS')
-const CALENDAR_ID = requireEnv('CALENDAR_ID')
-const API_KEY = requireEnv('GOOGLE_API_KEY')
+const CALENDAR_SERVICE_ADDRESS = requireProperty('CALENDAR_SERVICE_ADDRESS')
+const CALENDAR_ID = requireProperty('CALENDAR_ID')
+const API_KEY = requireProperty('GOOGLE_API_KEY')
 
 // From Google
 interface ApiCalendarEvent {
