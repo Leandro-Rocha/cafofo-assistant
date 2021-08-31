@@ -1,7 +1,7 @@
-import { ConnectionOptions } from 'typeorm';
-import { requireEnv } from './src/core/util'
+import { ConnectionOptions } from 'typeorm'
+import { requireEnv } from '../../core/util'
 
-const config: ConnectionOptions = {
+export const connectionOptions: ConnectionOptions = {
     type: 'mysql',
     host: requireEnv('DB_HOST'),
     port: Number(requireEnv('DB_PORT')),
@@ -20,6 +20,4 @@ const config: ConnectionOptions = {
     cli: {
         migrationsDir: 'src/database/migrations'
     }
-};
-
-export = config;
+}
