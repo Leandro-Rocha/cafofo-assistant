@@ -1,4 +1,4 @@
-import { Context, Telegraf } from 'telegraf'
+import { Context } from 'telegraf'
 import { createBackMainMenuButtons, MenuMiddleware, MenuTemplate } from 'telegraf-inline-menu'
 import { ConstOrPromise } from 'telegraf-inline-menu/dist/source/generic-types'
 import { MenuLike } from 'telegraf-inline-menu/dist/source/menu-like'
@@ -6,10 +6,11 @@ import { Update } from 'telegraf/typings/core/types/typegram'
 import { choreList } from '../../services/chores/data'
 import { Chore } from '../../services/chores/interfaces'
 import * as Actions from './actions'
+import { CafofoContext } from './telegram-bot'
 
 
-export function createMainMenu(bot: Telegraf) {
-    const menuTemplate = new MenuTemplate<Context<Update>>(ctx => `Olá ${ctx.from?.first_name}!\nComo posso ajudar?`)
+export function createMainMenu() {
+    const menuTemplate = new MenuTemplate<CafofoContext>(ctx => `Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`)
 
     menuTemplate.interact('Agenda', 'calendar', { do: (ctx) => Actions.showCalendar(ctx) })
     menuTemplate.interact('Resumo', 'overview', { do: Actions.showOverview })
@@ -18,11 +19,7 @@ export function createMainMenu(bot: Telegraf) {
     menuTemplate.submenu('Ver tarefa', 'view_chore', chooseChoresMenu({ action: Actions.listChoreExecution }))
 
     const menuMiddleware = new MenuMiddleware('/', menuTemplate)
-    bot.start(ctx => menuMiddleware.replyToContext(ctx))
-    bot.command('menu', ctx => menuMiddleware.replyToContext(ctx))
-    bot.use(menuMiddleware)
-
-    return menuTemplate
+    return menuMiddleware
 }
 
 function createBackMainButtons() {
