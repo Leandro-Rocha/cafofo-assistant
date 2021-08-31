@@ -1,6 +1,6 @@
 import * as os from 'os'
 import { Scenes, Telegraf } from 'telegraf'
-import { requireEnv, sleep } from '../../core/util'
+import { getProperty, requireProperty, sleep } from '../../core/util'
 import { User } from '../orm/entities/User.entity'
 import { loadScenes } from './scenes/scene-loader'
 
@@ -15,7 +15,7 @@ export namespace Bot {
     export async function init() {
         console.debug('Starting TelegramBot')
 
-        bot = new Telegraf<CafofoContext>(requireEnv('BOT_TOKEN'))
+        bot = new Telegraf<CafofoContext>(requireProperty('BOT_TOKEN'))
 
         loadScenes(bot)
 
@@ -51,7 +51,7 @@ export namespace Bot {
     }
 
     export async function broadcast(message: string) {
-        const broadcastChatIds = requireEnv('BROADCAST_CHAT_IDS')?.split(',')
+        const broadcastChatIds = getProperty('BROADCAST_CHAT_IDS')?.split(',')
         if (!broadcastChatIds) return
         for (const chatId of broadcastChatIds)
             await bot.telegram.sendMessage(chatId, message)

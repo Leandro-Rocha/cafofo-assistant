@@ -1,8 +1,8 @@
 import mongoose, { model, Schema } from 'mongoose'
-import { requireEnv } from '../../core/util'
+import { requireProperty } from '../../core/util'
 import { ChoreExecution, ChoreType } from '../../services/chores/interfaces'
 
-const MONGO_URL = requireEnv('MONGO_URL')
+const MONGO_URL = requireProperty('MONGO_URL')
 const dbName = 'cafofo' + (process.env.ENV === 'PROD' ? '' : '_test')
 
 console.debug(`Starting Mongo client [${dbName}]`)

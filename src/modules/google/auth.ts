@@ -1,12 +1,12 @@
 import axios from "axios";
 import * as fs from 'fs';
 import moment from "moment";
-import { requireEnv } from "../../core/util";
+import { requireProperty } from "../../core/util";
 
-const GOOGLE_TOKEN_API = requireEnv('GOOGLE_TOKEN_API')
-const GOOGLE_CLIENT_ID = requireEnv('GOOGLE_CLIENT_ID')
-const GOOGLE_CLIENT_SECRET = requireEnv('GOOGLE_CLIENT_SECRET')
-const GOOGLE_REFRESH_TOKEN = requireEnv('GOOGLE_REFRESH_TOKEN')
+const GOOGLE_TOKEN_API = requireProperty('GOOGLE_TOKEN_API')
+const GOOGLE_CLIENT_ID = requireProperty('GOOGLE_CLIENT_ID')
+const GOOGLE_CLIENT_SECRET = requireProperty('GOOGLE_CLIENT_SECRET')
+const GOOGLE_REFRESH_TOKEN = requireProperty('GOOGLE_REFRESH_TOKEN')
 const TOKEN_PATH = 'resources/'
 const TOKEN_FILE = 'token.json'
 
