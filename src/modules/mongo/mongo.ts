@@ -1,5 +1,5 @@
 import mongoose, { model, Schema } from 'mongoose'
-import { requireProperty } from '../../core/util'
+import { requireProperty } from 'profile-env'
 import { ChoreExecution, ChoreType } from '../../services/chores/interfaces'
 
 const MONGO_URL = requireProperty('MONGO_URL')

@@ -1,7 +1,7 @@
 import axios from "axios";
 import * as fs from 'fs';
 import moment from "moment";
-import { requireProperty } from "../../core/util";
+import { requireProperty } from "profile-env";
 
 const GOOGLE_TOKEN_API = requireProperty('GOOGLE_TOKEN_API')
 const GOOGLE_CLIENT_ID = requireProperty('GOOGLE_CLIENT_ID')

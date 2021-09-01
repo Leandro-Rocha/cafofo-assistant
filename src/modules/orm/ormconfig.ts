@@ -1,5 +1,5 @@
+import { requireProperty } from 'profile-env'
 import { ConnectionOptions } from 'typeorm'
-import { requireProperty } from '../../core/util'
 
 export const connectionOptions: ConnectionOptions = {
     type: 'mysql',
