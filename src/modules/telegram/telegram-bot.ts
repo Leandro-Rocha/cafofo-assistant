@@ -18,11 +18,16 @@ export namespace Bot {
 
         bot = new Telegraf<CafofoContext>(requireProperty('BOT_TOKEN'))
 
+        bot.use(async (ctx, next) => {
+            const cffUser = await User.findOne({ telegramChatId: ctx.from?.id })
+            ctx.cffUser = cffUser
+            next()
+        })
+
         loadScenes(bot)
 
         if (process.env.DEBUG == 'true') {
             bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
-            bot.on('message', (ctx) => { console.debug(ctx.from) })
 
             broadcast(`Olá!! Rodando em ${os.hostname()}`)
         }

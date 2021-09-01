@@ -1,32 +1,45 @@
-import { Composer, Scenes } from "telegraf";
-import { User } from "../../orm/entities/User.entity";
+import { Composer, Markup, Scenes } from "telegraf";
+import { showCalendar, showOverview } from "../actions";
 import { CafofoContext } from "../telegram-bot";
-import { createMainMenu } from "../telegram-menu";
-import { userRegisterWizard } from "./welcome-scene";
 
 const stepHandler = new Composer<CafofoContext>()
-stepHandler.use(async (ctx, next) => {
-    if (ctx.scene.current === userRegisterWizard) return
 
-    const cffUser = await User.findOne({ telegramChatId: ctx.from?.id })
+stepHandler.hears('Agenda', (ctx) => { showCalendar(ctx) })
+stepHandler.hears('Resumo', (ctx) => { showOverview(ctx) })
+stepHandler.hears('Tarefas', async (ctx) => { await ctx.scene.enter('chore-scene') })
 
+// const menuMiddleware = createMainMenu();
+// stepHandler.use(menuMiddleware)
+// stepHandler.start(ctx => menuMiddleware.replyToContext(ctx))
 
-    if (cffUser) {
-        ctx.cffUser = cffUser
-        next()
-    }
-    else {
-        console.debug(`User not found!`)
-        await ctx.scene.enter('user-register')
-    }
-})
+// stepHandler.command('menu', ctx => {
+//     ctx.reply('One time keyboard', Markup.keyboard(
+//         [['Agenda', 'Resumo'],
+//         ['Tarefas', 'Configurações']])
+//         .resize())
 
-const menuMiddleware = createMainMenu();
-stepHandler.use(menuMiddleware)
-stepHandler.start(ctx => menuMiddleware.replyToContext(ctx))
-stepHandler.command('menu', ctx => menuMiddleware.replyToContext(ctx))
+//     // menuMiddleware.replyToContext(ctx)
+// })
 
 export const mainWizard = new Scenes.WizardScene(
     'main',
+
+    async (ctx) => {
+        console.debug(`Entered [main]`)
+
+        if (!ctx.cffUser) {
+            console.debug(`User not found!`)
+            await ctx.scene.enter('user-register')
+            return
+        }
+
+        await ctx.reply(`Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`, Markup.keyboard(
+            [['Agenda', 'Resumo'],
+            ['Tarefas', 'Configurações']])
+            .resize())
+
+        ctx.wizard.next()
+    },
     stepHandler,
+
 )
