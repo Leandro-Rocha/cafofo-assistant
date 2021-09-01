@@ -1,4 +1,4 @@
-import { Composer, Scenes } from "telegraf";
+import { Composer, Markup, Scenes } from "telegraf";
 import { User } from "../../orm/entities/User.entity";
 import { CafofoContext } from "../telegram-bot";
 
@@ -22,14 +22,15 @@ stepHandler.use(async (ctx) => {
     await user.save()
 
     ctx.reply(`Legal! Cadastrei você, ${nickname}`)
-    ctx.scene.leave()
+    ctx.cffUser = user
+    await ctx.scene.enter('main')
 })
 
 export const userRegisterWizard = new Scenes.WizardScene(
     'user-register',
     async (ctx) => {
         await ctx.reply('Olá, parece que é sua primeira vez por aqui...')
-        await ctx.reply('Qual é seu apelido?')
+        await ctx.reply('Qual é seu apelido?', Markup.removeKeyboard())
         ctx.wizard.next()
     },
     stepHandler,

@@ -18,11 +18,16 @@ export namespace Bot {
 
         bot = new Telegraf<CafofoContext>(requireProperty('BOT_TOKEN'))
 
+        bot.use(async (ctx, next) => {
+            const cffUser = await User.findOne({ telegramChatId: ctx.from?.id })
+            ctx.cffUser = cffUser
+            next()
+        })
+
         loadScenes(bot)
 
         if (process.env.DEBUG == 'true') {
             bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
-            bot.on('message', (ctx) => { console.debug(ctx.from) })
 
             broadcast(`Olá!! Rodando em ${os.hostname()}`)
         }
@@ -43,10 +48,9 @@ export namespace Bot {
                 console.info('TelegramBot started')
                 break
             }
-            catch (reason) {
-                console.log(reason.response);
-
-                console.warn('Could not start Telegram bot. Retrying in 10s');
+            catch (reason: any) {
+                console.error(reason)
+                console.warn('Could not start Telegram bot. Retrying in 10s')
                 await sleep(10000)
             }
     }
