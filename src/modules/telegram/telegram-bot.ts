@@ -1,6 +1,7 @@
 import * as os from 'os'
+import { getProperty, requireProperty } from 'profile-env'
 import { Scenes, Telegraf } from 'telegraf'
-import { getProperty, requireProperty, sleep } from '../../core/util'
+import { sleep } from '../../core/util'
 import { User } from '../orm/entities/User.entity'
 import { loadScenes } from './scenes/scene-loader'
 

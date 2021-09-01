@@ -1,6 +1,6 @@
 import axios from 'axios'
 import moment, { Moment } from 'moment'
-import { requireProperty } from '../../core/util'
+import { requireProperty } from 'profile-env'
 import { getGoogleAccessToken } from '../../modules/google/auth'
 
 const CALENDAR_SERVICE_ADDRESS = requireProperty('CALENDAR_SERVICE_ADDRESS')
