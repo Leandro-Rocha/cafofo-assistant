@@ -43,10 +43,9 @@ export namespace Bot {
                 console.info('TelegramBot started')
                 break
             }
-            catch (reason) {
-                console.log(reason.response);
-
-                console.warn('Could not start Telegram bot. Retrying in 10s');
+            catch (reason: any) {
+                console.error(reason)
+                console.warn('Could not start Telegram bot. Retrying in 10s')
                 await sleep(10000)
             }
     }
