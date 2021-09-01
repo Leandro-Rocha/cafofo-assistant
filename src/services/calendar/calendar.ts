@@ -44,6 +44,12 @@ function parseCalendarEvent(event: ApiCalendarEvent): CalendarEvent {
     }
 }
 
+export function daysFromNow(day: string) {
+    const momentDay = moment(day)
+    if (momentDay.isSame(moment(), 'day')) return 'hoje'
+    if (momentDay.isSame(moment().add(1, 'day'), 'day')) return 'amanhã'
+    return momentDay.from(moment().startOf('day'))
+}
 
 export async function listNextEvents(maxResults = 10): Promise<CalendarEvent[]> {
 
