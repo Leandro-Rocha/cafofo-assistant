@@ -7,19 +7,7 @@ const stepHandler = new Composer<CafofoContext>()
 stepHandler.hears('Agenda', (ctx) => { showCalendar(ctx) })
 stepHandler.hears('Resumo', (ctx) => { showOverview(ctx) })
 stepHandler.hears('Tarefas', async (ctx) => { await ctx.scene.enter('chore-scene') })
-
-// const menuMiddleware = createMainMenu();
-// stepHandler.use(menuMiddleware)
-// stepHandler.start(ctx => menuMiddleware.replyToContext(ctx))
-
-// stepHandler.command('menu', ctx => {
-//     ctx.reply('One time keyboard', Markup.keyboard(
-//         [['Agenda', 'Resumo'],
-//         ['Tarefas', 'Configurações']])
-//         .resize())
-
-//     // menuMiddleware.replyToContext(ctx)
-// })
+stepHandler.hears('CafofoFlix', async (ctx) => { await ctx.scene.enter('cafofo-flix') })
 
 export const mainWizard = new Scenes.WizardScene(
     'main',
@@ -35,7 +23,7 @@ export const mainWizard = new Scenes.WizardScene(
 
         await ctx.reply(`Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`, Markup.keyboard(
             [['Agenda', 'Resumo'],
-            ['Tarefas', 'Configurações']])
+            ['Tarefas', 'CafofoFlix', 'Configurações']])
             .resize())
 
         ctx.wizard.next()

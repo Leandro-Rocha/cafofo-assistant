@@ -23,6 +23,7 @@
   "homepage": "https://github.com/Leandro-Rocha/cafofo-manager#readme",
   "dependencies": {
     "axios": "^0.21.1",
+    "cheerio": "^1.0.0-rc.10",
     "console-stamp": "^3.0.3",
     "cron": "^1.8.2",
     "dotenv": "^10.0.0",
