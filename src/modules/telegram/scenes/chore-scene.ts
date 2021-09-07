@@ -1,7 +1,7 @@
-import { Composer, Markup, Scenes } from "telegraf";
-import { choreList } from "../../../services/chores/data";
-import { lastChores, registerChore } from "../actions";
-import { CafofoContext } from "../telegram-bot";
+import { Composer, Markup, Scenes } from "telegraf"
+import { choreList } from "../../../services/chores/data"
+import { lastChores, registerChore } from "../actions"
+import { CafofoContext } from "../telegram-bot"
 
 const stepHandler = new Composer<CafofoContext>()
 // stepHandler.use(async (ctx) => {
@@ -31,7 +31,7 @@ export const choreWizard = new Scenes.WizardScene(
     async (ctx) => {
         console.debug(`Entered [chore-scene]`)
 
-        const choreNames = choreList.map(chore => chore.title);
+        const choreNames = choreList.map(chore => chore.title)
         await ctx.reply('Qual delas?', Markup.keyboard(
             ['Voltar', 'Ver todas', ...choreNames], {
             wrap: (_btn, _index, currentRow) => {
