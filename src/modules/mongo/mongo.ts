@@ -3,7 +3,7 @@ import { requireProperty } from 'profile-env'
 import { ChoreExecution, ChoreType } from '../../services/chores/interfaces'
 
 const MONGO_URL = requireProperty('MONGO_URL')
-const dbName = 'cafofo' + (process.env.ENV === 'PROD' ? '' : '_test')
+const dbName = requireProperty('DB_DATABASE')
 
 console.debug(`Starting Mongo client [${dbName}]`)
 

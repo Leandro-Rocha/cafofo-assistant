@@ -74,7 +74,7 @@ export const cafofoFlixWizard = new Scenes.WizardScene(
             return
         }
 
-        fs.writeFileSync(`./${Math.random()}.magnet`, magnet)
+        fs.writeFileSync(`/tmp/${Math.random()}.magnet`, magnet)
         await ctx.reply('Aye, aye, captain')
         await ctx.replyWithSticker(Stickers.JackTheParrot_wink)
 

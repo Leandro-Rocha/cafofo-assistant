@@ -5,7 +5,6 @@ import { sleep } from '../../core/util'
 import { User } from '../orm/entities/User.entity'
 import { loadScenes } from './scenes/scene-loader'
 
-
 export interface CafofoContext extends Scenes.WizardContext {
     cffUser?: User
 }
@@ -27,7 +26,9 @@ export namespace Bot {
         loadScenes(bot)
 
         if (process.env.DEBUG == 'true') {
-            bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
+            bot.on('sticker', (ctx) => {
+                console.debug(ctx.message.sticker)
+            })
 
             broadcast(`Olá!! Rodando em ${os.hostname()}`, requireProperty('BROADCAST_CHAT_IDS').split(','))
         }
@@ -42,13 +43,11 @@ export namespace Bot {
         })
 
         while (true)
-
             try {
                 await bot.launch()
                 console.info('TelegramBot started')
                 break
-            }
-            catch (reason: any) {
+            } catch (reason: any) {
                 console.error(reason)
                 console.warn('Could not start Telegram bot. Retrying in 10s')
                 await sleep(10000)
