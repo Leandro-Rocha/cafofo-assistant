@@ -30,7 +30,7 @@ export namespace Bot {
                 console.debug(ctx.message.sticker)
             })
 
-            broadcast(`Olá!! Rodando em ${os.hostname()}`, requireProperty('BROADCAST_CHAT_IDS').split(','))
+            broadcast(`Olá!! Rodando em ${os.hostname()}`, requireProperty('ADMIN_CHAT_IDS').split(','))
         }
 
         process.once('SIGINT', async () => {
