@@ -5,7 +5,7 @@ WORKDIR /usr/src/app
 RUN apk add --update npm
 
 COPY package*.json ./
-RUN npm ci --only=production
+RUN npm ci
 
 COPY src/ src/
 COPY tsconfig.json .
