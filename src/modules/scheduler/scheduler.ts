@@ -1,11 +1,14 @@
-// import cron from 'cron';
-// import { eventsOverview } from '../../services/calendar/calendar';
-// import { Bot } from '../telegram/telegram-bot';
+import cron from 'cron'
+import { requireProperty } from 'profile-env'
+import { eventsOverview } from '../../services/calendar/calendar'
+import { Bot } from '../telegram/telegram-bot'
 
-
-
-// const job = cron.job('0 * * * * *', async function () {
-//     Bot.broadcast((await eventsOverview()))
-// }, null, true, 'America/Sao_Paulo');
-
-// job.start()
+export const dailyReportJob = cron.job(
+    '0 0 8 * * *',
+    async function () {
+        Bot.broadcast(await eventsOverview(), requireProperty('BROADCAST_CHAT_IDS').split(','))
+    },
+    null,
+    true,
+    'America/Sao_Paulo',
+)
