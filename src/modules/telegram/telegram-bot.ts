@@ -1,5 +1,5 @@
 import * as os from 'os'
-import { getProperty, requireProperty } from 'profile-env'
+import { requireProperty } from 'profile-env'
 import { Scenes, Telegraf } from 'telegraf'
 import { sleep } from '../../core/util'
 import { User } from '../orm/entities/User.entity'
@@ -29,15 +29,15 @@ export namespace Bot {
         if (process.env.DEBUG == 'true') {
             bot.on('sticker', (ctx) => { console.debug(ctx.message.sticker) })
 
-            broadcast(`Olá!! Rodando em ${os.hostname()}`)
+            broadcast(`Olá!! Rodando em ${os.hostname()}`, requireProperty('BROADCAST_CHAT_IDS').split(','))
         }
 
         process.once('SIGINT', async () => {
-            await broadcast(`Saindo com [SIGINT] [${process.exitCode}]`)
+            await broadcast(`Saindo com [SIGINT] [${process.exitCode}]`, requireProperty('ADMIN_CHAT_IDS').split(','))
             bot.stop('SIGINT')
         })
         process.once('SIGTERM', async () => {
-            await broadcast(`Saindo com [SIGTERM] [${process.exitCode}]`)
+            await broadcast(`Saindo com [SIGTERM] [${process.exitCode}]`, requireProperty('ADMIN_CHAT_IDS').split(','))
             bot.stop('SIGTERM')
         })
 
@@ -55,10 +55,7 @@ export namespace Bot {
             }
     }
 
-    export async function broadcast(message: string) {
-        const broadcastChatIds = getProperty('BROADCAST_CHAT_IDS')?.split(',')
-        if (!broadcastChatIds) return
-        for (const chatId of broadcastChatIds)
-            await bot.telegram.sendMessage(chatId, message)
+    export async function broadcast(message: string, chatIds: string[]) {
+        for (const chatId of chatIds) await bot.telegram.sendMessage(chatId, message)
     }
 }
