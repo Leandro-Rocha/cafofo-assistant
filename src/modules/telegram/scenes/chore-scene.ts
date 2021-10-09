@@ -4,6 +4,7 @@ import { Chore } from '../../orm/entities/Chore.entity'
 import { ChoreExecution } from '../../orm/entities/ChoreExecution.entity'
 import { User } from '../../orm/entities/User.entity'
 import { lastChores } from '../actions'
+import { Stickers } from '../stickers'
 import { CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
@@ -58,6 +59,8 @@ export const choreWizard = new Scenes.WizardScene(
             const user = await User.findOneOrFail({ telegramChatId: ctx.cffUser?.telegramChatId })
             const execution = new ChoreExecution(user, chore, moment.now())
             execution.save()
+            await ctx.replyWithSticker(Stickers.ConcernedFroge_thumbs)
+            await ctx.reply('Anotado!')
         }
 
         await ctx.scene.enter('main')
