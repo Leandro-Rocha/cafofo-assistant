@@ -18,6 +18,6 @@ export const connectionOptions: ConnectionOptions = {
 
     migrations: [__dirname + '/migrations/*{.ts,.js}'],
     cli: {
-        migrationsDir: 'src/database/migrations'
-    }
+        migrationsDir: 'src/database/migrations',
+    },
 }
