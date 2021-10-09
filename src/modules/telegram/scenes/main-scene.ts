@@ -1,13 +1,24 @@
-import { Composer, Markup, Scenes } from "telegraf";
-import { showCalendar, showOverview } from "../actions";
-import { CafofoContext } from "../telegram-bot";
+import { Composer, Markup, Scenes } from 'telegraf'
+import { showCalendar, showOverview } from '../actions'
+import { CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
 
-stepHandler.hears('Agenda', (ctx) => { showCalendar(ctx) })
-stepHandler.hears('Resumo', (ctx) => { showOverview(ctx) })
-stepHandler.hears('Tarefas', async (ctx) => { await ctx.scene.enter('chore-scene') })
-stepHandler.hears('CafofoFlix', async (ctx) => { await ctx.scene.enter('cafofo-flix') })
+stepHandler.hears('Agenda', (ctx) => {
+    showCalendar(ctx)
+})
+
+stepHandler.hears('Resumo', (ctx) => {
+    showOverview(ctx)
+})
+
+stepHandler.hears('Tarefas', async (ctx) => {
+    await ctx.scene.enter('chore-scene')
+})
+
+stepHandler.hears('CafofoFlix', async (ctx) => {
+    await ctx.scene.enter('cafofo-flix')
+})
 
 export const mainWizard = new Scenes.WizardScene(
     'main',
@@ -21,13 +32,17 @@ export const mainWizard = new Scenes.WizardScene(
             return
         }
 
-        await ctx.reply(`Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`, Markup.keyboard(
-            [['Agenda', 'Resumo'],
-            ['Tarefas', 'CafofoFlix', 'Configurações']])
-            .resize())
+        await ctx.reply(
+            `Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`,
+            Markup.keyboard([
+                ['Agenda', 'Resumo'],
+                ['Tarefas', 'Configurações'],
+            ])
+                .resize()
+                .oneTime(),
+        )
 
         ctx.wizard.next()
     },
     stepHandler,
-
 )

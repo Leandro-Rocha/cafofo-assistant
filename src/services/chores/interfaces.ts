@@ -12,6 +12,30 @@ export interface ChoreExecution {
     timestamp: number
 }
 
+export enum Rooms {
+    COZINHA = 'COZINHA',
+    SALA = 'SALA',
+    QUARTINHO = 'QUARTINHO',
+    SUITE = 'SUITE',
+    ESCRITORIO = 'ESCRITORIO',
+    BANHEIRO_AZUL = 'BANHEIRO_AZUL',
+    BANHEIRO_AMARELO = 'BANHEIRO_AMARELO',
+}
+
+export enum Actions {
+    LIMPAR = 'LIMPAR',
+    LAVAR = 'LAVAR',
+    ASPIRAR = 'ASPIRAR',
+    TIRAR_PO = 'TIRAR_PO',
+}
+
+export class ActionMap {
+    LIMPAR = { present: 'limpar', past: 'limpou' }
+    LAVAR = { present: 'lavar', past: 'lavou' }
+    ASPIRAR = { present: 'aspirar', past: 'aspirou' }
+    TIRAR_PO = { present: 'tirar pó', past: 'tirou pó' }
+}
+
 export enum ChoreType {
     ASPIRAR = 'ASPIRAR',
     COZINHA_FOGAO = 'COZINHA_FOGAO',
