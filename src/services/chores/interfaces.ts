@@ -12,6 +12,13 @@ export interface ChoreExecution {
     timestamp: number
 }
 
+export class ActionMap {
+    LIMPAR = { present: 'limpar', past: 'limpou' }
+    LAVAR = { present: 'lavar', past: 'lavou' }
+    ASPIRAR = { present: 'aspirar', past: 'aspirou' }
+    TIRAR_PO = { present: 'tirar pó', past: 'tirou pó' }
+}
+
 export enum ChoreType {
     ASPIRAR = 'ASPIRAR',
     COZINHA_FOGAO = 'COZINHA_FOGAO',

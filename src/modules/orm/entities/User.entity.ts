@@ -1,8 +1,7 @@
-import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, BaseEntity } from 'typeorm'
 
 @Entity()
 export class User extends BaseEntity {
-
     @PrimaryGeneratedColumn()
     id!: number
 
@@ -18,4 +17,11 @@ export class User extends BaseEntity {
     @Column()
     telegramChatId!: number
 
+    constructor(firstName: string, lastName: string, nickname: string, telegramChatId: number) {
+        super()
+        this.firstName = firstName
+        this.lastName = lastName
+        this.nickname = nickname
+        this.telegramChatId = telegramChatId
+    }
 }

@@ -1,6 +1,10 @@
+import moment from 'moment'
 import { Composer, Markup, Scenes } from 'telegraf'
-import { choreList } from '../../../services/chores/data'
-import { lastChores, registerChore } from '../actions'
+import { Chore } from '../../orm/entities/Chore.entity'
+import { ChoreExecution } from '../../orm/entities/ChoreExecution.entity'
+import { User } from '../../orm/entities/User.entity'
+import { lastChores } from '../actions'
+import { Stickers } from '../stickers'
 import { CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
@@ -10,14 +14,17 @@ export const choreWizard = new Scenes.WizardScene(
     async (ctx) => {
         console.debug(`Entered [chore-scene]`)
 
-        const choreNames = choreList.map((chore) => chore.title)
+        const choreNames = (await Chore.find()).map((chore) => chore.title)
+
         await ctx.reply(
             'Qual delas?',
             Markup.keyboard(['Voltar', 'Ver todas', ...choreNames], {
                 wrap: (_btn, _index, currentRow) => {
                     return _index < 3 || currentRow.length >= 3
                 },
-            }).resize(),
+            })
+                .resize()
+                .oneTime(),
         )
 
         ctx.wizard.next()
@@ -36,18 +43,24 @@ export const choreWizard = new Scenes.WizardScene(
             return
         }
 
-        const chore = choreList.find((chore) => chore.title === choice)!
-
-        await ctx.reply(`Confirma que ${ctx.cffUser?.nickname} ${chore.past}?`, Markup.inlineKeyboard([Markup.button.callback('Sim', choice), Markup.button.callback('Não', 'no')]))
+        const chore = await Chore.findOneOrFail({ title: choice }, { relations: ['action'] })
+        await ctx.reply(
+            `Confirma que ${ctx.cffUser?.nickname} ${chore.action.past} ${chore.title}?`,
+            Markup.inlineKeyboard([Markup.button.callback('Sim', choice), Markup.button.callback('Não', 'no')]),
+        )
 
         ctx.wizard.next()
     },
     async (ctx) => {
         const choice: string = (<any>ctx.callbackQuery)?.data
-        const chore = choreList.find((chore) => chore.title === choice)!
+        const chore = await Chore.findOneOrFail({ title: choice })
 
         if (chore) {
-            await registerChore(ctx, chore)
+            const user = await User.findOneOrFail({ telegramChatId: ctx.cffUser?.telegramChatId })
+            const execution = new ChoreExecution(user, chore, moment.now())
+            execution.save()
+            await ctx.replyWithSticker(Stickers.ConcernedFroge_thumbs)
+            await ctx.reply('Anotado!')
         }
 
         await ctx.scene.enter('main')

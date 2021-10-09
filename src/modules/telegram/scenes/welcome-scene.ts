@@ -1,10 +1,9 @@
-import { Composer, Markup, Scenes } from "telegraf";
-import { User } from "../../orm/entities/User.entity";
-import { CafofoContext } from "../telegram-bot";
+import { Composer, Markup, Scenes } from 'telegraf'
+import { User } from '../../orm/entities/User.entity'
+import { CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
 stepHandler.use(async (ctx) => {
-
     if (!ctx.from) return
 
     const nickname: string = (<any>ctx.message)?.text
@@ -14,11 +13,7 @@ stepHandler.use(async (ctx) => {
         return
     }
 
-    const user = new User();
-    user.firstName = ctx.from.first_name
-    user.lastName = ctx.from.last_name
-    user.nickname = nickname
-    user.telegramChatId = ctx.from.id
+    const user = new User(ctx.from.first_name, ctx.from.last_name!, nickname, ctx.from.id)
     await user.save()
 
     ctx.reply(`Legal! Cadastrei você, ${nickname}`)

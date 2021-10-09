@@ -1,4 +1,4 @@
-import moment from "moment"
+import moment from 'moment'
 
 export function miguelFacts() {
     const udm = moment('2021-01-25')
