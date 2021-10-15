@@ -6,7 +6,7 @@ const stepHandler = new Composer<CafofoContext>()
 stepHandler.use(async (ctx) => {
     if (!ctx.from) return
 
-    const nickname: string = (<any>ctx.message)?.text
+    const nickname: string = (ctx.message as any)?.text
 
     if (!nickname || nickname.startsWith('/')) {
         ctx.reply('Sério, qual é seu apelido?')

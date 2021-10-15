@@ -30,7 +30,7 @@ export const choreWizard = new Scenes.WizardScene(
         ctx.wizard.next()
     },
     async (ctx) => {
-        const choice: string = (<any>ctx.message)?.text
+        const choice: string = (ctx.message as any)?.text
 
         if (choice === 'Voltar') {
             await ctx.scene.enter('main')
@@ -52,7 +52,7 @@ export const choreWizard = new Scenes.WizardScene(
         ctx.wizard.next()
     },
     async (ctx) => {
-        const choice: string = (<any>ctx.callbackQuery)?.data
+        const choice: string = (ctx.callbackQuery as any)?.data
         const chore = await Chore.findOneOrFail({ title: choice })
 
         if (chore) {
