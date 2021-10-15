@@ -25,7 +25,7 @@ export namespace Bot {
 
         loadScenes(bot)
 
-        if (process.env.DEBUG == 'true') {
+        if (process.env.DEBUG === 'true') {
             bot.on('sticker', (ctx) => {
                 console.debug(ctx.message.sticker)
             })

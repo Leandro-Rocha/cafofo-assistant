@@ -16,7 +16,7 @@ export const cafofoFlixWizard = new Scenes.WizardScene(
         ctx.wizard.next()
     },
     async (ctx) => {
-        const answer: string = (<any>ctx.message)?.text
+        const answer: string = (ctx.message as any)?.text
 
         if (answer === 'Voltar') {
             await ctx.scene.enter('main')
@@ -35,7 +35,7 @@ export const cafofoFlixWizard = new Scenes.WizardScene(
         ctx.wizard.next()
     },
     async (ctx) => {
-        const rawAnswer: string = (<any>ctx.message)?.text
+        const rawAnswer: string = (ctx.message as any)?.text
         const answer = rawAnswer.substring(rawAnswer.indexOf('/list') + 6)
 
         if (answer === 'Voltar') {
@@ -55,7 +55,7 @@ export const cafofoFlixWizard = new Scenes.WizardScene(
         ctx.wizard.next()
     },
     async (ctx) => {
-        const rawAnswer: string = (<any>ctx.message)?.text
+        const rawAnswer: string = (ctx.message as any)?.text
         const magnet = rawAnswer.substring(rawAnswer.indexOf('/download') + 10)
 
         if (magnet === 'Voltar') {
