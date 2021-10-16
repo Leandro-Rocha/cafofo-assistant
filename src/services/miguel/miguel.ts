@@ -19,6 +19,7 @@ function pregnancy() {
 }
 
 function age() {
-    if (isBorn) return `Ele tem ${dob.fromNow(true)}`
-    else return `\nEle chega ${dob.fromNow()}!`
+    const startOfDay = moment().startOf('day')
+    if (isBorn) return `Ele tem ${dob.from(startOfDay, true)}`
+    else return `\nEle chega ${dob.from(startOfDay)}!`
 }
