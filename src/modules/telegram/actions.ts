@@ -5,6 +5,7 @@ import * as Calendar from '../../services/calendar/calendar'
 import { showEventWithTime } from '../../services/calendar/calendar'
 import { ChoreService } from '../../services/chores/chore-service'
 import { miguelFacts } from '../../services/miguel/miguel'
+import { getForecast } from '../../services/weather/hg'
 import { Stickers } from './stickers'
 import { CafofoContext } from './telegram-bot'
 
@@ -68,6 +69,28 @@ export async function showOverview(ctx: Context<Update>) {
         console.error(err)
         await ctx.replyWithSticker(Stickers.Buddy_Bear_sad)
         await ctx.reply('Não consigo fazer o resumo de hoje...')
+    }
+
+    return '/'
+}
+
+export async function showForecast(ctx: Context<Update>) {
+    try {
+        const weather = await getForecast()
+        const days = weather.forecast
+
+        let result = ''
+
+        days.forEach((dia) => {
+            const date = moment(dia.date)
+            result += `${date.format('D ddd')} ${dia.icon} ${dia.min}°C - ${dia.max}°C\n`
+        })
+
+        await ctx.replyWithMarkdownV2('```\n' + result + '```')
+    } catch (err) {
+        console.error(err)
+        await ctx.replyWithSticker(Stickers.Buddy_Bear_sad)
+        await ctx.reply('Não consigo fazer a previsão do tempo...')
     }
 
     return '/'

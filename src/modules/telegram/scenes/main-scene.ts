@@ -1,5 +1,5 @@
 import { Composer, Markup, Scenes } from 'telegraf'
-import { showCalendar, showOverview } from '../actions'
+import { showCalendar, showForecast, showOverview } from '../actions'
 import { CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
@@ -10,6 +10,10 @@ stepHandler.hears('Agenda', (ctx) => {
 
 stepHandler.hears('Resumo', (ctx) => {
     showOverview(ctx)
+})
+
+stepHandler.hears('Previsão', (ctx) => {
+    showForecast(ctx)
 })
 
 stepHandler.hears('Tarefas', async (ctx) => {
@@ -35,7 +39,7 @@ export const mainWizard = new Scenes.WizardScene(
         await ctx.reply(
             `Olá ${ctx.cffUser?.nickname}!\nComo posso ajudar?`,
             Markup.keyboard([
-                ['Agenda', 'Resumo'],
+                ['Agenda', 'Resumo', 'Previsão'],
                 ['Tarefas', 'Configurações'],
             ])
                 .resize()
