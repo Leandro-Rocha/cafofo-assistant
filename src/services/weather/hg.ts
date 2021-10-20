@@ -14,12 +14,14 @@ export async function getForecast() {
         time: results.time,
         temp: results.temp,
         description: results.description,
+        condition: results.condition_slug,
+        icon: conditionMap.get(results.condition_slug)!,
         forecast: [],
     }
 
     ;(results.forecast as any[]).forEach((result) => {
         const date: string = result.date
-        const [forecastMonth, forecastDay] = date.split('-')
+        const [forecastDay, forecastMonth] = date.split('/')
 
         const forecast: Forecast = {
             date: `${year}-${forecastMonth}-${forecastDay}`,
@@ -42,6 +44,8 @@ type Weather = {
     time: string
     temp: number
     description: string
+    condition: string
+    icon: string
     forecast: Forecast[]
 }
 

@@ -79,11 +79,13 @@ export async function showForecast(ctx: Context<Update>) {
         const weather = await getForecast()
         const days = weather.forecast
 
-        let result = ''
+        let result = `Agora: ${weather.icon}\n`
+        result += `${weather.temp}°C - ${weather.description}\n\n`
 
         days.forEach((dia) => {
             const date = moment(dia.date)
-            result += `${date.format('D ddd')} ${dia.icon} ${dia.min}°C - ${dia.max}°C\n`
+            result += `${date.format('D ddd')} ${dia.icon} ${dia.min}° - ${dia.max}°\n`
+            if (date.weekday() === 0) result += '-------------------\n'
         })
 
         await ctx.replyWithMarkdownV2('```\n' + result + '```')
