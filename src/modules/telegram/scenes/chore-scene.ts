@@ -1,11 +1,12 @@
 import moment from 'moment'
+import { requireProperty } from 'profile-env'
 import { Composer, Markup, Scenes } from 'telegraf'
 import { Chore } from '../../orm/entities/Chore.entity'
 import { ChoreExecution } from '../../orm/entities/ChoreExecution.entity'
 import { User } from '../../orm/entities/User.entity'
 import { lastChores } from '../actions'
 import { Stickers } from '../stickers'
-import { CafofoContext } from '../telegram-bot'
+import { Bot, CafofoContext } from '../telegram-bot'
 
 const stepHandler = new Composer<CafofoContext>()
 
@@ -53,14 +54,21 @@ export const choreWizard = new Scenes.WizardScene(
     },
     async (ctx) => {
         const choice: string = (ctx.callbackQuery as any)?.data
-        const chore = await Chore.findOneOrFail({ title: choice })
+        const chore = await Chore.findOneOrFail({ title: choice }, { relations: ['action'] })
 
         if (chore) {
-            const user = await User.findOneOrFail({ telegramChatId: ctx.cffUser?.telegramChatId })
+            const userChatId = ctx.cffUser?.telegramChatId!
+            const user = await User.findOneOrFail({ telegramChatId: userChatId })
             const execution = new ChoreExecution(user, chore, moment.now())
             execution.save()
-            await ctx.replyWithSticker(Stickers.ConcernedFroge_thumbs)
+
+            await ctx.replyWithSticker(Stickers.FunkyGoose_thumbs)
             await ctx.reply('Anotado!')
+
+            // Broadcast to all but current user
+            const broadcastIds = requireProperty('BROADCAST_CHAT_IDS').split(',')
+            const otherUserIds = broadcastIds.filter((id) => id != String(userChatId))
+            Bot.broadcast(`${ctx.cffUser?.nickname} acabou de ${chore.action.present} ${chore.title}!`, otherUserIds)
         }
 
         await ctx.scene.enter('main')

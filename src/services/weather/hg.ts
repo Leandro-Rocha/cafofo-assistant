@@ -69,4 +69,5 @@ const conditionMap = new Map<string, string>([
     ['clear_day', '☀️'],
     ['cloud', '☁️'],
     ['cloudly_day', '⛅'],
+    ['cloudly_night', '⛅'],
 ])

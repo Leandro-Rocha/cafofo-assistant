@@ -55,6 +55,10 @@ export namespace Bot {
     }
 
     export async function broadcast(message: string, chatIds: string[]) {
-        for (const chatId of chatIds) await bot.telegram.sendMessage(chatId, message)
+        try {
+            for (const chatId of chatIds) await bot.telegram.sendMessage(chatId, message)
+        } catch (error) {
+            console.error(error)
+        }
     }
 }
