@@ -39,9 +39,11 @@ export async function lastChores(ctx: Context<Update>) {
         let response = ''
         const lastExecutions = await ChoreService.lastChoreExecutions()
 
-        lastExecutions.forEach((lastExecution) => {
-            response += `${lastExecution.chore.title} - ${moment(lastExecution.timestamp).fromNow()} por ${lastExecution.user.nickname}\n`
-        })
+        lastExecutions
+            .sort((a, b) => a.chore.title.localeCompare(b.chore.title))
+            .forEach((lastExecution) => {
+                response += `${lastExecution.chore.title} - ${moment(lastExecution.timestamp).fromNow()} por ${lastExecution.user.nickname}\n`
+            })
 
         await ctx.reply(response)
     } catch (err) {

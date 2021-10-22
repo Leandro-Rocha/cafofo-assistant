@@ -15,7 +15,7 @@ export const choreWizard = new Scenes.WizardScene(
     async (ctx) => {
         console.debug(`Entered [chore-scene]`)
 
-        const choreNames = (await Chore.find()).map((chore) => chore.title)
+        const choreNames = (await Chore.find()).map((chore) => chore.title).sort()
 
         await ctx.reply(
             'Qual delas?',
