@@ -1,6 +1,6 @@
 import moment from 'moment'
 
-const dob = moment('2021-10-25')
+const dob = moment('2021-10-25 16:00:00')
 const isBorn = moment().isAfter(dob)
 
 export function miguelFacts() {
@@ -19,7 +19,7 @@ function pregnancy() {
 }
 
 function age() {
-    const startOfDay = moment().startOf('day')
-    if (isBorn) return `Ele tem ${dob.from(startOfDay, true)}`
-    else return `\nEle chega ${dob.from(startOfDay)}!`
+    const now = moment()
+    if (isBorn) return `Ele tem ${dob.from(now, true)}`
+    else return `\nEle chega ${dob.from(now)}!`
 }
