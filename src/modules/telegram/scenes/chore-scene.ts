@@ -67,7 +67,7 @@ export const choreWizard = new Scenes.WizardScene(
 
             // Broadcast to all but current user
             const broadcastIds = requireProperty('BROADCAST_CHAT_IDS').split(',')
-            const otherUserIds = broadcastIds.filter((id) => id != String(userChatId))
+            const otherUserIds = broadcastIds.filter((id) => id !== String(userChatId))
             Bot.broadcast(`${ctx.cffUser?.nickname} acabou de ${chore.action.present} ${chore.title}!`, otherUserIds)
         }
 

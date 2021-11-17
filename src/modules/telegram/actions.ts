@@ -57,16 +57,7 @@ export async function lastChores(ctx: Context<Update>) {
 
 export async function showOverview(ctx: Context<Update>) {
     try {
-        await ctx.reply(await Calendar.eventsOverview())
-        await ctx.reply(miguelFacts())
-
-        let overdueChoresText = 'Essas tarefas estão atrasadas!\n\n'
-        const overdueChores = await ChoreService.overdueChores()
-
-        overdueChores.forEach((overdueChore) => {
-            overdueChoresText += `${overdueChore.chore.title} - ${moment(overdueChore.timestamp).fromNow()} por ${overdueChore.user.nickname}\n`
-        })
-        await ctx.reply(overdueChoresText)
+        await ctx.reply(await createOverview())
     } catch (err) {
         console.error(err)
         await ctx.replyWithSticker(Stickers.Buddy_Bear_sad)
@@ -74,6 +65,21 @@ export async function showOverview(ctx: Context<Update>) {
     }
 
     return '/'
+}
+
+export async function createOverview() {
+    let overview = await Calendar.eventsOverview()
+    overview += '\n\n'
+
+    overview += miguelFacts()
+    overview += '\n\n'
+
+    overview += 'Essas tarefas estão atrasadas:\n\n'
+    const overdueChores = await ChoreService.overdueChores()
+    overdueChores.forEach((overdueChore) => {
+        overview += `${overdueChore.chore.title} - ${moment(overdueChore.timestamp).fromNow()} por ${overdueChore.user.nickname}\n`
+    })
+    return overview
 }
 
 export async function showForecast(ctx: Context<Update>) {

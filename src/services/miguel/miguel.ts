@@ -1,10 +1,10 @@
 import moment from 'moment'
 
-const dob = moment('2021-10-25 16:00:00')
+const dob = moment('2021-10-25 16:53:00')
 const isBorn = moment().isAfter(dob)
 
 export function miguelFacts() {
-    let facts = `👶🏻 - Miguel facts:`
+    let facts = `👶🏻 - Miguel facts: `
     facts += `${!isBorn ? pregnancy() : ''}`
     facts += `${age()}`
 
